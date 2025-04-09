@@ -3,13 +3,20 @@ from utils import *
 
 class Player:
     def __init__(self):
-        hand = []
-        for hand in range(0:6)
-            hand.append(deck.draw())
+        self.hand = []
 
+    def add_card(self, card):
+        self.hand.append(card)
 
 class Play:
-    def play(self):
-        deck = Deck()
-        deck.fill()
+    def __init__(self):
+        self.deck = Deck()
+        self.deck.fill_small()
+        self.deck.shuffle()
+        self.players = [Player(), Player(), Player(), Player()]
+
+        # deal 6 cards to each player
+        for player in self.players:
+            for i in range(6):
+                player.add_card(self.deck.draw())
         
