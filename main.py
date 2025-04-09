@@ -12,6 +12,13 @@ for i in range(len(game.players)):
 
 print()
 
+# while lopp for the continuous play of the game, doesn't work yet, but the continue_game function should
+while durak_game.continue_game():
+    while # not AI.output == do_nothing:
+        players[durak_game.get_player()].play_card(...) # Hopefully plays a card from the players hand
+
+
+
 allegation = game.deck.draw()
 for card in game.players[0].hand:
     if game.can_beat(card, allegation):

@@ -9,11 +9,6 @@ class Card:
     def num():  # return number for neural network
         return ...
 
-    def getSuit(self):
-        return SUITS[self.suit]
-    def getValue(self):
-        return VALUES[self.value]
-
     def __str__(self):
         return f"{self.getValue()} {self.getSuit()}"
 
