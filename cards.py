@@ -14,8 +14,12 @@ class Card:
     def getValue(self):
         return VALUES[self.value]
 
+    def __str__(self):
+        return f"{self.getValue()} {self.getSuit()}"
+
 class Deck:
     def __init__(self):
+        # index `0` is the bottom of the deck
         self.cards = []
    
     # fill with a full deck
@@ -35,3 +39,7 @@ class Deck:
 
     def draw(self):
         return self.cards.pop()
+
+    def last(self):
+        return self.cards[0]
+
