@@ -16,12 +16,3 @@ print()
 while durak_game.continue_game():
     while # not AI.output == do_nothing:
         players[durak_game.get_player()].play_card(...) # Hopefully plays a card from the players hand
-
-
-
-allegation = game.deck.draw()
-for card in game.players[0].hand:
-    if game.can_beat(card, allegation):
-        print(f"{card} can beat {allegation}")
-    else:
-        print(f"{card} can't beat {allegation}")
