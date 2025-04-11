@@ -1,8 +1,29 @@
 from cards import *
 from utils import *
+import random
+
+class Field:
+    def __init__(self):
+        self.cards = {}
+
+    def add_allegation(self, card):
+        self.cards.update({card: None})
+
+    def beat(self, allegation, card):
+        self.cards.update({allegation: card})
+
+    def unbeaten(self):
+        unbeaten = []
+        for card in self.cards:
+            if self.cards[card] == None:
+                unbeaten.append(card)
+
+        return unbeaten
+
+    def is_empty(self):
+        return self.cards.is_empty()
 
 class Player:
-
     def __init__(self):
         self.hand = []
 
@@ -10,11 +31,8 @@ class Player:
         self.hand.append(card)
     
     def play_card(self, num): # removes the card that you want to play from your hand and returns the card that you played
-        
-        
         removed = self.hand.remove(num)
         return removed
-
 
     def continue_game(self):
         players_in = 0
@@ -26,8 +44,13 @@ class Player:
         else:
             return False
 
-class Play:
+    def select_attacking_cards(self, field):
+        if field.is_empty(): # initial attack
+            
+        
+    def select_defending_cards(self, field):
 
+class Play:
     def can_beat(self, card, allegation):
         return (
             (card.suit == allegation.suit and card.value > allegation.value)
@@ -40,18 +63,22 @@ class Play:
         self.deck.shuffle()
         self.players = [Player(), Player(), Player(), Player()]
         self.trump_suit = self.deck.last().suit
-        self.curr_player = 0
+
+        self.victim = 0
 
         # deal 6 cards to each player
         for player in self.players:
             for i in range(6):
                 player.add_card(self.deck.draw())
     
-    def get_player(self):
-        return curr_player
+    def turn(self):
+        attacker = self.victim
+        self.victim = self.next_player(self.victim)
 
-    def next_player(self):
-        if curr_player = 3:
+    def next_player(self, curr_player):
+        if curr_player >= len(self.players) - 1:
             curr_player = 0
         else:
             curr_player += 1
+
+
