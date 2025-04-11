@@ -6,7 +6,7 @@ class Card:
         self.suit = suit
         self.value = value
     
-    def num():  # return number for neural network
+    def num(self):  # return number for neural network
         return ...
 
     def __str__(self):
