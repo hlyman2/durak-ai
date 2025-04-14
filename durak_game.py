@@ -27,7 +27,7 @@ class Field:
             legal = False
 
         if legal:
-               self.cards.update({card: None})
+            self.cards.update({card: None})
             return True
         else:
             return False
@@ -90,6 +90,9 @@ class Player:
         while len(self.hand) < 6 and self.deck:
             self.hand.append(self.deck.pop())
 
+    def handLength(self):
+        return len(self.hand)
+
 class Play:
     def can_play(self, check):
         first = check[0].getValue()
@@ -143,8 +146,14 @@ class Play:
 
         return new
 
-    def deal_cards(self):
-        
+    def deal_cards(self, victim):
+        order = self.players
+        last = order.remove(victim)
+        order.append(last)
+        for Player in order:
+            Player.pickUpCards()
+
+
     def next_turn(self):
         self.deal_cards()
         self.victim = self.next_player(self.victim)
