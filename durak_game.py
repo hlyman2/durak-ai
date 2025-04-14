@@ -3,14 +3,42 @@ from utils import *
 import random
 
 class Field:
-    def __init__(self):
+    def can_beat(self, card, allegation):
+        return (
+            (card.suit == allegation.suit and card.value > allegation.value)
+            or (card.suit == self.trump_suit and allegation.suit != self.trump_suit)
+        )
+
+    def __init__(self, trump, max_cards):
         self.cards = {}
+        self.max_cards = max_cards
+        self.trump_suit = trump
 
+    # returns `False` if illegal
     def add_allegation(self, card):
-        self.cards.update({card: None})
+        legal = False
+        if self.cards.empty():
+            legal = True
+        for a, b in self.cards.items():
+            if a.value == card.value or b.value == card.value:
+                legal = True
 
+        if len(self.cards) >= self.max_cards:
+            legal = False
+
+        if legal:
+               self.cards.update({card: None})
+            return True
+        else:
+            return False
+
+    # Returns `False` if illegal
     def beat(self, allegation, card):
-        self.cards.update({allegation: card})
+        if self.can_beat(card, allegation) and self.cards[allegation] == None:
+            self.cards.update({allegation: card})
+            return True
+        else:
+            return False
 
     def unbeaten(self):
         unbeaten = []
@@ -42,38 +70,29 @@ class Player:
         else:
             return False
 
-    def continue_game(self):
-        players_in = 0
-        for Player in self.players:
-            if not Player.isOut(): 
-                players_in += 1
-        if players_in > 1:
-            return True
-        else:
-            return False
-    
-    #def select_attacking_cards(self, field):
-        #if field.is_empty(): # initial attack
-            
-        
-    #def select_defending_cards(self, field):
+    # Return `False` to pick up the cards, otherwise add cards to the field to defend
+    def defend():
+        return False
+
+    # Add cards to the field to attack, return `False` to pass
+    def attack():
+        return False
 
     def pickUpCards(self):
         while len(self.hand) < 6 and self.deck:
             self.hand.append(self.deck.pop())
 
 class Play:
-    def can_beat(self, card, allegation):
-        return (
-            (card.suit == allegation.suit and card.value > allegation.value)
-            or (card.suit == self.trump_suit and allegation.suit != self.trump_suit)
-        )
-
     def can_play(self, check):
         first = check[0].getValue()
         return all(x.getValue() == first for x in check)
 
-
+    def continue_game(self):
+        players_in = 0
+        for p in self.players:
+            if not p.isOut(): 
+                players_in += 1
+        return players_in > 1
 
     def __init__(self):
         self.deck = Deck()
@@ -84,23 +103,34 @@ class Play:
 
         self.victim = 0
         self.curr_player = 0
-
-        # deal 6 cards to each player
-        for player in self.players:
-            for i in range(6):
-                player.add_card(self.deck.draw())
     
     def turn(self):
         attacker = self.victim
         self.victim = self.next_player(self.victim)
 
-    def next_player(self):
-        if self.players(curr_player + 1).isOut():
-            curr_player += 1
+    # returns the next alive player in order after `curr_player`
+    def next_player(self, curr_player):
+        new = curr_player + 1
+        while self.players[new].isOut():
+            if new >= len(self.players) - 1:
+                new = 0
+            else:
+                new += 1
+
+        return new
+
+    # returns the player behind curr_player
+    def last_player(self, )
+        new = curr_player + 1
+        while self.players[new].isOut():
+            if new < 0:
+                new = len(self.players) - 1
+            else:
+                new -= 1
+
+        return new
+
+    def deal_cards(self):
+
+    def next_turn(self):
         
-        if curr_player == 3:
-            curr_player = 0
-        else:
-            curr_player += 1
-
-
