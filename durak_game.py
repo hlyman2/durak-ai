@@ -48,6 +48,14 @@ class Field:
 
         return unbeaten
 
+    def remove_all_cards(self):
+        cards = []
+        for l, r in self.cards.items();
+            cards.append(l)
+            cards.append(r)
+        self.cards = {}
+        return cards
+
     def is_empty(self):
         return self.cards.is_empty()
 
@@ -87,12 +95,17 @@ class Play:
         first = check[0].getValue()
         return all(x.getValue() == first for x in check)
 
-    def continue_game(self):
+    def count_players(self):
         players_in = 0
         for p in self.players:
             if not p.isOut(): 
                 players_in += 1
-        return players_in > 1
+
+        return players_in
+
+
+    def continue_game(self):
+        return self.count_players() > 1
 
     def __init__(self):
         self.deck = Deck()
@@ -120,8 +133,8 @@ class Play:
         return new
 
     # returns the player behind curr_player
-    def last_player(self, )
-        new = curr_player + 1
+    def last_player(self, curr_player)
+        new = curr_player - 1
         while self.players[new].isOut():
             if new < 0:
                 new = len(self.players) - 1
@@ -131,6 +144,28 @@ class Play:
         return new
 
     def deal_cards(self):
-
-    def next_turn(self):
         
+    def next_turn(self):
+        self.deal_cards()
+        self.victim = self.next_player(self.victim)
+        
+        curr_player = self.last_player(self.victim)
+
+        n_skipped = 0
+
+        self.field = Field(self.trump_suit, min(6, len(self.players[self.victim].cards))
+
+        while n_skipped < self.count_players() - 1:
+            if curr_player == self.victim:
+                if self.players[curr_player].defend() == False:
+                    self.players[curr_player].cards.join(self.field.remove_all_cards())
+                    break
+            else:
+                if self.players[curr_player].attack() == False:
+                    n_skipped += 1
+                else:
+                    n_skipped = 0
+
+            # TODO: be able to beat
+
+            curr_player = self.next_player(self.victim)
