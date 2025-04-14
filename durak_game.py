@@ -50,7 +50,7 @@ class Field:
 
     def remove_all_cards(self):
         cards = []
-        for l, r in self.cards.items();
+        for l, r in self.cards.items():
             cards.append(l)
             cards.append(r)
         self.cards = {}
@@ -136,7 +136,7 @@ class Play:
         return new
 
     # returns the player behind curr_player
-    def last_player(self, curr_player)
+    def last_player(self, curr_player):
         new = curr_player - 1
         while self.players[new].isOut():
             if new < 0:
@@ -162,7 +162,7 @@ class Play:
 
         n_skipped = 0
 
-        self.field = Field(self.trump_suit, min(6, len(self.players[self.victim].cards))
+        self.field = Field(self.trump_suit, min(6, len(self.players[self.victim].cards)))
 
         while n_skipped < self.count_players() - 1:
             if curr_player == self.victim:
