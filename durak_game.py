@@ -1,6 +1,8 @@
 from cards import *
 from utils import *
 import random
+import human
+import bot
 
 class Field:
     def can_beat(self, card, allegation):
@@ -60,9 +62,10 @@ class Field:
         return self.cards.is_empty()
 
 class Player:
-    def __init__(self):
+    def __init__(self, player_type):
         self.hand = []
         self.hasScored = False
+        self.player_type = player_type
 
     def add_card(self, card):
         self.hand.append(card)
@@ -79,12 +82,18 @@ class Player:
             return False
 
     # Return `False` to pick up the cards, otherwise add cards to the field to defend
-    def defend():
-        return False
+    def defend(self, field):
+        if self.player_type = PLAYER_HUMAN:
+            return human.defend(self.hand, field)
+        else if self.player_type = PLAYER_BOT:
+            return bot.defend(self.hand, field)
 
     # Add cards to the field to attack, return `False` to pass
-    def attack():
-        return False
+    def attack(self, field):
+        if self.player_type = PLAYER_HUMAN:
+            return human.attack(self.hand, field)
+        else if self.player_type = PLAYER_BOT:
+            return bot.attack(self.hand, field)
 
     def pickUpCards(self):
         while len(self.hand) < 6 and self.deck:
@@ -166,21 +175,22 @@ class Play:
 
         while True:
             if curr_player == self.victim:
-                if self.players[curr_player].defend() == False:
+                if self.players[curr_player].defend(self.field) == False:
                     self.players[curr_player].cards.join(self.field.remove_all_cards())
                     break
                 else:
                     n_skipped = 0
             else:
-                if self.players[curr_player].attack() == False:
+                if self.players[curr_player].attack(self.field) == False:
                     n_skipped += 1
                 else:
                     n_skipped = 0
 
 
             while n_skipped < self.count_players() - 1 and !self.field.unbeaten().empty():
-                 if self.players[curr_player].defend() == False:
+                 if self.players[curr_player].defend(self.field) == False:
                     self.players[curr_player].cards.join(self.field.remove_all_cards())
                     break
 
             curr_player = self.next_player(self.victim)
+

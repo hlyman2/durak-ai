@@ -20,3 +20,6 @@ VALUES = {
     13: 'K',
     14: 'A'
 }
+
+PLAYER_BOT = 0
+PLAYER_HUMAN = 1
