@@ -164,17 +164,23 @@ class Play:
 
         self.field = Field(self.trump_suit, min(6, len(self.players[self.victim].cards)))
 
-        while n_skipped < self.count_players() - 1:
+        while True:
             if curr_player == self.victim:
                 if self.players[curr_player].defend() == False:
                     self.players[curr_player].cards.join(self.field.remove_all_cards())
                     break
+                else:
+                    n_skipped = 0
             else:
                 if self.players[curr_player].attack() == False:
                     n_skipped += 1
                 else:
                     n_skipped = 0
 
-            # TODO: be able to beat
+
+            while n_skipped < self.count_players() - 1 and !self.field.unbeaten().empty():
+                 if self.players[curr_player].defend() == False:
+                    self.players[curr_player].cards.join(self.field.remove_all_cards())
+                    break
 
             curr_player = self.next_player(self.victim)
