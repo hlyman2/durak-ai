@@ -4,14 +4,25 @@ import utils
 
 
 def Test():
-    print(game.players[1].hand)
-    for x in range (5):
-        print(game.players[1].hand[x])
-    for i in range (5):
-        game.players[1].play_card(game.players[1].hand[i])
-    print(game.players[1].hand)
+    handLen = len(game.players[1].hand) - 1
+
+    for  i in range (6):
+        print(game.players[1].play_card(game.players[1].hand[handLen - i]))
+        print(game.players[1].isOut())
+    for  i in range (4):
+        print(game.players[0].play_card(game.players[0].hand[handLen - i]))
+    print(game.count_players())
+    print(game.players[0].hand)
     game.deal_cards(game.players[1])
 
+    print(game.players[0].hand)
+    print(game.players[1].hand)
+    print(game.players[2].hand)
+    print(game.players[3].hand)
+
+    game.next_turn()
+    game.next_turn()
+    game.next_turn()
 
 
 game = durak_game.Play()
