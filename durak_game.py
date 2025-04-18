@@ -60,16 +60,18 @@ class Field:
         return self.cards.is_empty()
 
 class Player:
-    def __init__(self):
+    def __init__(self, deck):
         self.hand = []
+        self.deck = deck
         self.hasScored = False
+        self.pickUpCards()
 
     def add_card(self, card):
         self.hand.append(card)
 
-    def play_card(self, num): # removes the card that you want to play from your hand and returns the card that you played
-        removed = self.hand.remove(num)
-        return removed
+    def play_card(self, plCard): # removes the card that you want to play from your hand and returns the card that you played
+        self.hand.remove(plCard)
+        return plCard
 
     def isOut(self):
         if not self.hand:
@@ -88,10 +90,11 @@ class Player:
 
     def pickUpCards(self):
         while len(self.hand) < 6 and self.deck:
-            self.hand.append(self.deck.pop())
+            self.hand.append(self.deck.draw())
 
     def handLength(self):
         return len(self.hand)
+    
 
 class Play:
     def can_play(self, check):
@@ -114,7 +117,7 @@ class Play:
         self.deck = Deck()
         self.deck.fill_small()
         self.deck.shuffle()
-        self.players = [Player(), Player(), Player(), Player()]
+        self.players = [Player(self.deck), Player(self.deck), Player(self.deck), Player(self.deck)]
         self.trump_suit = self.deck.last().suit
 
         self.victim = 0
@@ -148,11 +151,10 @@ class Play:
 
     def deal_cards(self, victim):
         order = self.players
-        last = order.remove(victim)
-        order.append(last)
-        for Player in order:
-            Player.pickUpCards()
-
+        order.remove(victim)
+        order.append(victim)
+        for player in order:
+            player.pickUpCards()
 
     def next_turn(self):
         self.deal_cards()
@@ -178,7 +180,7 @@ class Play:
                     n_skipped = 0
 
 
-            while n_skipped < self.count_players() - 1 and !self.field.unbeaten().empty():
+            while n_skipped < self.count_players() - 1 and  not self.field.unbeaten().empty():
                  if self.players[curr_player].defend() == False:
                     self.players[curr_player].cards.join(self.field.remove_all_cards())
                     break
