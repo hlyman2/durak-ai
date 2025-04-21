@@ -1,5 +1,5 @@
-from rlcard.games.blackjack.dealer import BlackjackDealer as Dealer
-from rlcard.games.blackjack.judger import BlackjackJudger as Judger
-from rlcard.games.blackjack.player import BlackjackPlayer as Player
-from rlcard.games.blackjack.game import BlackjackGame as Game
+from dealer import DurakDealer as Dealer
+from judger import DurakJudger as Judger
+from player import DurakPlayer as Player
+from game import DurakGame as Game
 

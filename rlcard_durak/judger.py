@@ -1,5 +1,5 @@
 
-class BlackjackJudger:
+class DurakJudger:
     def __init__(self, np_random):
         ''' Initialize a BlackJack judger class
         '''

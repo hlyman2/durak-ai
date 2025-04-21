@@ -1,14 +1,14 @@
 from copy import deepcopy
 import numpy as np
 
-from rlcard.games.blackjack import Dealer
-from rlcard.games.blackjack import Player
-from rlcard.games.blackjack import Judger
+from rlcard_durak import Dealer
+from rlcard_durak import Player
+from rlcard_durak import Judger
 
-class BlackjackGame:
+class DurakGame:
 
     def __init__(self, allow_step_back=False):
-        ''' Initialize the class Blackjack Game
+        ''' Initialize the class Durak Game
         '''
         self.allow_step_back = allow_step_back
         self.np_random = np.random.RandomState()

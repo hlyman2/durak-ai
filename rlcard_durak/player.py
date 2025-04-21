@@ -1,8 +1,8 @@
 
-class BlackjackPlayer:
+class DurakPlayer:
 
     def __init__(self, player_id, np_random):
-        ''' Initialize a Blackjack player class
+        ''' Initialize a Durak player class
 
         Args:
             player_id (int): id for the player
