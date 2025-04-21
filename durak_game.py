@@ -66,17 +66,14 @@ class Player:
         self.hand = []
         self.hasScored = False
         self.player_type = player_type
+        self.pickUpCards()
 
-    def add_card(self, card):
-        self.hand.append(card)
-
-    def play_card(self, num): # removes the card that you want to play from your hand and returns the card that you played
-        removed = self.hand.remove(num)
-        return removed
+    def play_card(self, plCard): # removes the card that you want to play from your hand and returns the card that you played
+        self.hand.remove(plCard)
+        return plCard
 
     def isOut(self):
         if not self.hand:
-            self.score()
             return True
         else:
             return False
@@ -97,10 +94,11 @@ class Player:
 
     def pickUpCards(self):
         while len(self.hand) < 6 and self.deck:
-            self.hand.append(self.deck.pop())
+            self.hand.append(self.deck.draw())
 
     def handLength(self):
         return len(self.hand)
+    
 
 class Play:
     def can_play(self, check):
@@ -123,7 +121,7 @@ class Play:
         self.deck = Deck()
         self.deck.fill_small()
         self.deck.shuffle()
-        self.players = [Player(), Player(), Player(), Player()]
+        self.players = [Player(self.deck), Player(self.deck), Player(self.deck), Player(self.deck)]
         self.trump_suit = self.deck.last().suit
 
         self.victim = 0
@@ -136,6 +134,9 @@ class Play:
     # returns the next alive player in order after `curr_player`
     def next_player(self, curr_player):
         new = curr_player + 1
+        if new > len(self.players) - 1:
+            new = 0
+
         while self.players[new].isOut():
             if new >= len(self.players) - 1:
                 new = 0
@@ -147,6 +148,8 @@ class Play:
     # returns the player behind curr_player
     def last_player(self, curr_player):
         new = curr_player - 1
+        if new < 0:
+            new = len(self.players) - 1
         while self.players[new].isOut():
             if new < 0:
                 new = len(self.players) - 1
@@ -156,22 +159,34 @@ class Play:
         return new
 
     def deal_cards(self, victim):
+        for player in self.players:
+            if not player.isOut() and not player == victim:
+                player.pickUpCards()
+        if not victim.isOut():
+            victim.pickUpCards()
+        
+        
+        '''
         order = self.players
-        last = order.remove(victim)
-        order.append(last)
-        for Player in order:
-            Player.pickUpCards()
-
+        order.remove(victim)
+        order.append(victim)
+        for player in order:
+            if not player.isOut():
+                player.pickUpCards()
+        '''
 
     def next_turn(self):
-        self.deal_cards()
+        self.deal_cards(self.players[self.victim])
+
+        print(self.victim, self.curr_player)
+
         self.victim = self.next_player(self.victim)
         
         curr_player = self.last_player(self.victim)
 
         n_skipped = 0
 
-        self.field = Field(self.trump_suit, min(6, len(self.players[self.victim].cards)))
+        self.field = Field(self.trump_suit, min(6, len(self.players[self.victim].hand)))
 
         while True:
             if curr_player == self.victim:
@@ -186,10 +201,13 @@ class Play:
                 else:
                     n_skipped = 0
 
-
             while n_skipped < self.count_players() - 1 and !self.field.unbeaten().empty():
                  if self.players[curr_player].defend(self.field) == False:
                     self.players[curr_player].cards.join(self.field.remove_all_cards())
+
+            while n_skipped < self.count_players() - 1 and  not self.field.unbeaten():
+                 if self.players[curr_player].defend() == False:
+                    self.players[curr_player].hand.append(self.field.remove_all_cards())
                     break
 
             curr_player = self.next_player(self.victim)

@@ -11,6 +11,13 @@ class Card:
 
     def __str__(self):
         return f"{self.getValue()} {self.getSuit()}"
+    
+    def getValue(self):
+        return self.value
+    
+    def getSuit(self):
+        return self.suit
+
 
 class Deck:
     def __init__(self):
