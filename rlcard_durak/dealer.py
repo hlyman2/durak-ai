@@ -1,4 +1,4 @@
-from rlcard.utils import init_standard_deck
+from cards import *
 import numpy as np
 
 class DurakDealer:
@@ -8,7 +8,7 @@ class DurakDealer:
         '''
         self.np_random = np_random
         self.num_decks = num_decks
-        self.deck = init_standard_deck()
+        self.deck = Deck()
         if self.num_decks not in [0, 1]:  # 0 indicates infinite decks of cards
             self.deck = self.deck * self.num_decks  # copy m standard decks of cards
         self.shuffle()
@@ -23,7 +23,7 @@ class DurakDealer:
         self.np_random.shuffle(shuffle_deck)
         self.deck = list(shuffle_deck)
 
-    def deal_card(self, player):
+    def deal_card(self, player, victim):
         ''' Distribute one card to the player
 
         Args:
