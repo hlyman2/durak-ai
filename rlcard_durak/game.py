@@ -1,9 +1,9 @@
 from copy import deepcopy
 import numpy as np
 
-from rlcard_durak import Dealer
-from rlcard_durak import Player
-from rlcard_durak import Judger
+from dealer import *
+from player import *
+from judger import *
 
 class DurakGame:
     def __init__(self, allow_step_back=False):
@@ -16,18 +16,13 @@ class DurakGame:
         pass
 
     def init_game(self):
-        self.dealer = Dealer(self.np_random, self.num_decks)
-
         self.players = []
         for i in range(self.num_players):
             self.players.append(Player(i, self.np_random))
+        
+        self.dealer = Dealer(self.players)
 
         self.judger = Judger(self.np_random)
-
-        for i in range(2):
-            for j in range(self.num_players):
-                self.dealer.deal_card(self.players[j])
-            self.dealer.deal_card(self.dealer)
 
         for i in range(self.num_players):
             self.players[i].status, self.players[i].score = self.judger.judge_round(self.players[i])

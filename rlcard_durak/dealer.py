@@ -1,20 +1,17 @@
-from cards import *
+from rlcard.utils import init_standard_deck
 import numpy as np
+from player import *
+from cards import *
+
 
 class DurakDealer:
-
-    def __init__(self, np_random, num_decks=1):
-        ''' Initialize a Blackjack dealer class
+    ''' Initialize a GinRummy dealer class
+    '''
+    def __init__(self, players):
+        ''' Empty discard_pile, set shuffled_deck, set stock_pile
         '''
-        self.np_random = np_random
-        self.num_decks = num_decks
-        self.deck = Deck()
-        if self.num_decks not in [0, 1]:  # 0 indicates infinite decks of cards
-            self.deck = self.deck * self.num_decks  # copy m standard decks of cards
+        self.deck = init_standard_deck()
         self.shuffle()
-        self.hand = []
-        self.status = 'alive'
-        self.score = 0
 
     def shuffle(self):
         ''' Shuffle the deck
@@ -23,15 +20,15 @@ class DurakDealer:
         self.np_random.shuffle(shuffle_deck)
         self.deck = list(shuffle_deck)
 
-    def deal_card(self, player, victim):
-        ''' Distribute one card to the player
+    def deal_cards(self, victim, players):
+        ''' Deal some cards from stock_pile to one player
 
         Args:
-            player_id (int): the target player's id
+            player (GinRummyPlayer): The GinRummyPlayer object
+            num (int): The number of cards to be dealt
         '''
-        idx = self.np_random.choice(len(self.deck))
-        card = self.deck[idx]
-        if self.num_decks != 0:  # If infinite decks, do not pop card from deck
-            self.deck.pop(idx)
-        # card = self.deck.pop()
-        player.hand.append(card)
+        for player in players:
+            if not player.isOut() and not player == victim:
+                player.pickUpCards()
+        if not victim.isOut():
+            victim.pickUpCards()
