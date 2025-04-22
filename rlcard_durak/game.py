@@ -6,7 +6,6 @@ from rlcard_durak import Player
 from rlcard_durak import Judger
 
 class DurakGame:
-
     def __init__(self, allow_step_back=False):
         ''' Initialize the class Durak Game
         '''
@@ -14,18 +13,9 @@ class DurakGame:
         self.np_random = np.random.RandomState()
 
     def configure(self, game_config):
-        ''' Specifiy some game specific parameters, such as number of players
-        '''
-        self.num_players = game_config['game_num_players']
-        self.num_decks = game_config['game_num_decks']
+        pass
 
     def init_game(self):
-        ''' Initialilze the game
-
-        Returns:
-            state (dict): the first state of the game
-            player_id (int): current player's id
-        '''
         self.dealer = Dealer(self.np_random, self.num_decks)
 
         self.players = []
@@ -54,20 +44,13 @@ class DurakGame:
         return self.get_state(self.game_pointer), self.game_pointer
 
     def step(self, action):
-        ''' Get the next state
-
-        Args:
-            action (str): a specific action of blackjack. (Hit or Stand)
-
-        Returns:/
-            dict: next player's state
-            int: next plater's id
         '''
         if self.allow_step_back:
             p = deepcopy(self.players[self.game_pointer])
             d = deepcopy(self.dealer)
             w = deepcopy(self.winner)
             self.history.append((d, p, w))
+        '''
 
         next_state = {}
         # Play hit
@@ -173,7 +156,7 @@ class DurakGame:
                 but now have more than 4 keys (action, state, player0 hand, player1 hand, ... , dealer hand)
                 Although key 'state' have duplicated information with key 'player hand' and 'dealer hand', I couldn't remove it because of other codes
                 To remove it, we need to change dqn agent too in my opinion
-                '''
+                ''' 
         state = {}
         state['actions'] = ('hit', 'stand')
         hand = [card.get_index() for card in self.players[player_id].hand]
