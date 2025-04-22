@@ -1,4 +1,3 @@
-
 class DurakJudger:
     def __init__(self, np_random):
         ''' Initialize a BlackJack judger class
@@ -52,22 +51,8 @@ class DurakJudger:
                 game.winner['player' + str(game_pointer)] = 1
 
     def judge_score(self, cards):
-        ''' Judge the score of a given cards set
-
-        Args:
-            cards (list): a list of cards
-
-        Returns:
-            score (int): the score of the given cards set
-        '''
-        score = 0
-        count_a = 0
-        for card in cards:
-            card_score = self.rank2score[card.rank]
-            score += card_score
-            if card.rank == 'A':
-                count_a += 1
-        while score > 21 and count_a > 0:
-            count_a -= 1
-            score -= 10
-        return score
+        # big reward for being out
+        if len(cards) == 0:
+            return 100
+        else: # smaller reward for having few cards
+            return 36 - len(cards)
