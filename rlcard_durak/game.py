@@ -1,9 +1,9 @@
 from copy import deepcopy
 import numpy as np
 
-from dealer import *
-from player import *
-from judger import *
+from rlcard_durak.dealer import *
+from rlcard_durak.player import *
+from rlcard_durak.judger import *
 
 class DurakGame:
     def __init__(self, allow_step_back=False):

@@ -2,14 +2,14 @@ import numpy as np
 from collections import OrderedDict
 
 from rlcard.envs import Env
-from rlcard.games.blackjack import Game
+from rlcard_durak import Game
 
 DEFAULT_GAME_CONFIG = {
         'game_num_players': 4,
         'game_num_decks': 1
         }
 
-class BlackjackEnv(Env):
+class DurakEnv(Env):
     ''' Blackjack Environment
     '''
 

@@ -1,6 +1,6 @@
-from utils.utils import init_standard_deck
+from rlcard_durak.utils.utils import init_standard_deck
 import numpy as np
-from player import *
+from rlcard_durak.player import *
 
 
 class DurakDealer:

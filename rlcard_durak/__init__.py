@@ -1,5 +1,5 @@
-from dealer import DurakDealer as Dealer
-from judger import DurakJudger as Judger
-from player import DurakPlayer as Player
-from game import DurakGame as Game
+from rlcard_durak.dealer import DurakDealer as Dealer
+from rlcard_durak.judger import DurakJudger as Judger
+from rlcard_durak.player import DurakPlayer as Player
+from rlcard_durak.game import DurakGame as Game
 
