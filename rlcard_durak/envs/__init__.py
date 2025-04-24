@@ -1,7 +1,7 @@
 ''' Register new environments
 '''
-import rlcard
-from rlcard_durak.envs.envs import Env
+
+from rlcard_durak.envs import env
 from rlcard.envs.registration import register, make
 
 register(

@@ -1,12 +1,12 @@
 import rlcard
-import rlcard_durak
+import rlcard_durak.games as games
 from rlcard_durak import envs
 from rlcard.agents.dmc_agent import model as DMCAgent
 from rlcard.utils.utils import print_card
-import rlcard_durak
+import rlcard_durak.games as games
 
 num_players = 4
-env = rlcard_durak.make(
+env = games.make(
     'durak_env', 
     config = {'game_num_players': num_players,},
 )

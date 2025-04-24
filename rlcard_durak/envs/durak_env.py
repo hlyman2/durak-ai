@@ -2,7 +2,7 @@ import numpy as np
 from collections import OrderedDict
 
 from rlcard.envs import Env
-from rlcard_durak import Game
+from rlcard_durak.games import Game
 
 DEFAULT_GAME_CONFIG = {
         'game_num_players': 4,
