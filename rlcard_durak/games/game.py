@@ -1,9 +1,10 @@
 from copy import deepcopy
 import numpy as np
 
-from rlcard_durak.games.dealer import *
-from rlcard_durak.games.player import *
-from rlcard_durak.games.judger import *
+from dealer import *
+from player import *
+from judger import *
+from action import *
 
 class DurakGame:
     def __init__(self, allow_step_back=False):
@@ -24,12 +25,12 @@ class DurakGame:
 
         self.judger = Judger(self.np_random)
 
+        '''
         for i in range(self.num_players):
             self.players[i].status, self.players[i].score = self.judger.judge_round(self.players[i])
+        '''
 
-        self.dealer.status, self.dealer.score = self.judger.judge_round(self.dealer)
-
-        self.winner = {'dealer': 0}
+        self.winner = {}
         for i in range(self.num_players):
             self.winner['player' + str(i)] = 0
 
@@ -101,33 +102,17 @@ class DurakGame:
         return next_state, self.game_pointer
 
     def step_back(self):
-        ''' Return to the previous state of the game
-
-        Returns:
-            Status (bool): check if the step back is success or not
-        '''
-        #while len(self.history) > 0:
-        if len(self.history) > 0:
-            self.dealer, self.players[self.game_pointer], self.winner = self.history.pop()
-            return True
-        return False
+        raise NotImplementedError
 
     def get_num_players(self):
-        ''' Return the number of players in blackjack
-
-        Returns:
-            number_of_player (int): blackjack only have 1 player
-        '''
         return self.num_players
 
-    @staticmethod
     def get_num_actions():
         ''' Return the number of applicable actions
 
-        Returns:
-            number_of_actions (int): there are only two actions (hit and stand)
+            number_of_actions (int)
         '''
-        return 2
+
 
     def get_player_id(self):
         ''' Return the current player's id
@@ -167,15 +152,8 @@ class DurakGame:
 
         return state
 
+    # done
     def is_over(self):
-        ''' Check if the game is over
-
-        Returns:
-            status (bool): True/False
-        '''
-        '''
-                I should change here because judger and self.winner is changed too
-                '''
         for i in range(self.num_players):
             if self.winner['player' + str(i)] == 0:
                 return False
