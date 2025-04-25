@@ -1,5 +1,4 @@
-from dealer import DurakDealer as Dealer
-from judger import DurakJudger as Judger
-from player import DurakPlayer as Player
-from game import DurakGame as Game
+name = "rlcard_durak"
+__version__ = "1.2.0"
 
+from rlcard.envs import make

@@ -22,15 +22,15 @@ class DurakJudger:
         '''
     
         players_in = 0
-        for player in game.players[]:
-            if !player.hand.empty():
+        for player in game.players:
+            if player.hand:
                 players_in += 1
 
         if players_in > 1:
             game.winner[game_pointer] = 0
-        else if !game.players[game_pointer].hand.empty():
+        elif game.players[game_pointer].hand:
             game.winner[game_pointer] = 1
-        else
+        else:
             game.winner[game_pointer] = -5
 
     def judge_score(self, cards):

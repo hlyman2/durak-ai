@@ -1,43 +1,24 @@
-import cards
-import durak_game
-import utils
+import rlcard
+import rlcard_durak.games as games
+from rlcard_durak import envs
+from rlcard.agents.dmc_agent import model as DMCAgent
+from rlcard.utils.utils import print_card
+import rlcard_durak.games as games
 
+num_players = 4
+env = games.make(
+    'durak_env', 
+    config = {'game_num_players': num_players,},
+)
 
-def Test():
-    handLen = len(game.players[1].hand) - 1
+agent1 = DMCAgent(env.num_actions)
+agent2 = DMCAgent(env.num_actions)
+agent3 = DMCAgent(env.num_actions)
+agent4 = DMCAgent(env.num_actions)
 
-    for  i in range (6):
-        print(game.players[1].play_card(game.players[1].hand[handLen - i]))
-        print(game.players[1].isOut())
-    for  i in range (4):
-        print(game.players[0].play_card(game.players[0].hand[handLen - i]))
-    print(game.count_players())
-    print(game.players[0].hand)
-    game.deal_cards(game.players[1])
-
-    print(game.players[0].hand)
-    print(game.players[1].hand)
-    print(game.players[2].hand)
-    print(game.players[3].hand)
-
-    game.next_turn()
-    game.next_turn()
-    game.next_turn()
-
-
-game = durak_game.Play()
-'''
-print(f"trump card: {game.deck.last()}\n")
-for i in range(len(game.players)):
-    print(f"player {i} hand:")
-    for card in game.players[i].hand:
-        print(f"  {card}")
-'''
-print()
-
-Test()
-
-# while lopp for the continuous play of the game, doesn't work yet, but the continue_game function should
-#while durak_game.continue_game():
- #   while # not AI.output == do_nothing:
-  #      players[durak_game.get_player()].play_card(...) # Hopefully plays a card from the players hand
+env.set_agents([
+    agent1, 
+    agent2, 
+    agent3, 
+    agent4,
+])
