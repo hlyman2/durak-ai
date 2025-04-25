@@ -11,7 +11,7 @@ class Action:
         self.data = data
 
 def generate_legal_actions(field, hand, act_type):
-    if act_type = "initial_attack":
+    if act_type == "initial_attack":
         ranks = {}
         for rank in Card.valid_rank:
 
@@ -24,7 +24,7 @@ def generate_legal_actions(field, hand, act_type):
         for card in hand:
             if card.rank in rankset:
                 attacking_cards.append(card)
-        n_more_attacks = field.max_cards - len(fields.cards)
+        n_more_attacks = field.max_cards - len(field.cards)
 
         allowed = []
 

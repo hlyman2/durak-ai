@@ -1,10 +1,10 @@
 from copy import deepcopy
 import numpy as np
 
-from dealer import *
-from player import *
-from judger import *
-from action import *
+from .dealer import *
+from .player import *
+from .judger import *
+from .action import *
 
 class DurakGame:
     def __init__(self, allow_step_back=False):

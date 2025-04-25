@@ -21,3 +21,5 @@ env.set_agents([
     agent3, 
     agent4,
 ])
+
+run_dmc(env)
