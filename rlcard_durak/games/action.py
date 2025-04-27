@@ -13,7 +13,7 @@ class Action:
 def generate_legal_actions(field, hand, act_type):
     if act_type == "initial_attack":
         ranks = {}
-        for rank in Card.valid_rank:
+        #for rank in Card.valid_rank:
 
     if act_type == "attack":
         rankset = set(())
@@ -34,4 +34,4 @@ def generate_legal_actions(field, hand, act_type):
 
         return allowed
         
-    if act_type == "defense":
+#    if act_type == "defense":

@@ -19,11 +19,11 @@ class DurakGame:
     def init_game(self):
         self.players = []
         for i in range(self.num_players):
-            self.players.append(Player(i, self.np_random))
+            self.players.append(DurakPlayer(i, self.np_random))
         
-        self.dealer = Dealer(self.players)
+        self.dealer = DurakDealer(self.players)
 
-        self.judger = Judger(self.np_random)
+        self.judger = DurakJudger(self.np_random)
 
         '''
         for i in range(self.num_players):
@@ -105,7 +105,7 @@ class DurakGame:
         raise NotImplementedError
 
     def get_num_players(self):
-        return self.num_players
+        return len(self.players)
 
     def get_num_actions():
         ''' Return the number of applicable actions

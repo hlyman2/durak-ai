@@ -20,7 +20,7 @@ class DurakEnv(Env):
         self.default_game_config = DEFAULT_GAME_CONFIG
         self.game = Game()
         super().__init__(config)
-        self.actions = ['attack', 'defent', 'take', 'stand']
+        self.actions = ['attack', 'defend', 'take', 'stand']
         self.state_shape = [[4] for _ in range(self.num_players)]
         self.action_shape = [None for _ in range(self.num_players)]
 
