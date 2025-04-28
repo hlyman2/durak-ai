@@ -14,7 +14,9 @@ class DurakGame:
         self.np_random = np.random.RandomState()
 
     def configure(self, game_config):
-        pass
+        self.num_players = game_config['game_num_players']
+        self.num_decks = game_config['game_num_decks']
+
 
     def init_game(self):
         self.players = []
@@ -105,13 +107,14 @@ class DurakGame:
         raise NotImplementedError
 
     def get_num_players(self):
-        return len(self.players)
+        return self.num_players
 
-    def get_num_actions():
+    def get_num_actions(self):
         ''' Return the number of applicable actions
 
             number_of_actions (int)
         '''
+        return 4 #Check this, could be returning the wrong number
 
 
     def get_player_id(self):
