@@ -17,15 +17,16 @@ class DurakGame:
         self.num_players = game_config['game_num_players']
         self.num_decks = game_config['game_num_decks']
 
-
     def init_game(self):
         self.players = []
         for i in range(self.num_players):
             self.players.append(DurakPlayer(i, self.np_random))
         
         self.dealer = DurakDealer(self.players)
-
         self.judger = DurakJudger(self.np_random)
+
+        self.victim = 0
+        self.game_pointer = 1
 
         '''
         for i in range(self.num_players):
@@ -114,7 +115,7 @@ class DurakGame:
 
             number_of_actions (int)
         '''
-        return 4 #Check this, could be returning the wrong number
+        return len(state['actions'])
 
 
     def get_player_id(self):
@@ -125,6 +126,7 @@ class DurakGame:
         '''
         return self.game_pointer
 
+    # State is what is known to the agent????
     def get_state(self, player_id):
         ''' Return player's state
 
@@ -141,17 +143,25 @@ class DurakGame:
                 To remove it, we need to change dqn agent too in my opinion
                 ''' 
         state = {}
-        state['actions'] = ('hit', 'stand')
-        hand = [card.get_index() for card in self.players[player_id].hand]
-        if self.is_over():
-            dealer_hand = [card.get_index() for card in self.dealer.hand]
-        else:
-            dealer_hand = [card.get_index() for card in self.dealer.hand[1:]]
+        state['field'] = self.field
 
-        for i in range(self.num_players):
-            state['player' + str(i) + ' hand'] = [card.get_index() for card in self.players[i].hand]
-        state['dealer hand'] = dealer_hand
-        state['state'] = (hand, dealer_hand)
+        act_type = "attack"
+        if player_id == self.victim:
+            act_type = "defense"
+        else if field.empty():
+            act_type = "initial_attack"
+        state['actions'] = action.generate_legal_actions(self.field, self.players[player_id].hand, act_type)
+
+        # hand = [card.get_index() for card in self.players[player_id].hand]
+        # if self.is_over():
+        #     dealer_hand = [card.get_index() for card in self.dealer.hand]
+        # else:
+        #     dealer_hand = [card.get_index() for card in self.dealer.hand[1:]]
+
+        # for i in range(self.num_players):
+        #     state['player' + str(i) + ' hand'] = [card.get_index() for card in self.players[i].hand]
+        # state['dealer hand'] = dealer_hand
+        # state['state'] = (hand, dealer_hand)
 
         return state
 
