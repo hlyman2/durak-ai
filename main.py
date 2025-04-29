@@ -3,6 +3,7 @@ from rlcard_durak import envs
 from rlcard.agents.dmc_agent import model as DMCAgent
 from rlcard.utils.utils import print_card
 import rlcard_durak.games as games
+from run_rl import train
 
 num_players = 4
 env = rlcard.make(
@@ -10,6 +11,9 @@ env = rlcard.make(
     config = {'game_num_players': num_players,},
 )
 
+train(env)
+
+'''
 agent1 = DMCAgent(env.num_actions)
 agent2 = DMCAgent(env.num_actions)
 agent3 = DMCAgent(env.num_actions)
@@ -23,3 +27,4 @@ env.set_agents([
 ])
 
 run_dmc(env)
+'''
