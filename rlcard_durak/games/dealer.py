@@ -15,7 +15,7 @@ class DurakDealer:
         ''' Shuffle the deck
         '''
         shuffle_deck = np.array(self.deck)
-        self.np_random.shuffle(shuffle_deck)
+        np.random.shuffle(shuffle_deck)
         self.deck = list(shuffle_deck)
 
     def deal_to_6(self, victim, player):
