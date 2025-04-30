@@ -5,6 +5,7 @@ from .dealer import *
 from .player import *
 from .judger import *
 from .action import *
+from .field import *
 
 class DurakGame:
     def __init__(self, allow_step_back=False):
@@ -12,6 +13,7 @@ class DurakGame:
         '''
         self.allow_step_back = allow_step_back
         self.np_random = np.random.RandomState()
+
 
     def configure(self, game_config):
         self.num_players = game_config['game_num_players']
@@ -24,6 +26,8 @@ class DurakGame:
         
         self.dealer = DurakDealer(self.players)
         self.judger = DurakJudger(self.np_random)
+        
+        self.field = Field(self.dealer.getTrump(), 6)
 
         self.victim = 1
         self.game_pointer = 0
@@ -60,7 +64,7 @@ class DurakGame:
         if action.act_type == "attack":
             if action.data.empty():
                 n_skipped += 1
-                if n_skipped >= self.count_players() - 1 && self.field.unbeaten().empty():
+                if n_skipped >= self.count_players() - 1 and self.field.unbeaten().empty():
                     # allegations beat
                     self.iterate_victim()
                 else:
@@ -76,17 +80,17 @@ class DurakGame:
             self.n_skipped = 0
 
             if action.data.empty(): # pick up cards
-                self.players[curr_player].cards.join(self.field.remove_all_cards())
+                self.players[self.gamer_pointer].cards.join(self.field.remove_all_cards())
                 self.iterate_victim()
                 self.iterate_victim()
             else:
                 unbeaten = self.field.unbeaten()
                 beat = beats(unbeaten, action.data, self.field)
                 for i in range(self.field.unbeaten()):
-                    field[unbeaten[i]] = beat[i]
+                    self.field[unbeaten[i]] = beat[i]
                     self.players[self.game_pointer].hand.remove(beat[i])
 
-                if len(field.cards) >= field.max_cards: # allegations beat
+                if len(self.field.cards) >= self.field.max_cards: # allegations beat
                     self.iterate_victim()
                 else:
                     self.game_pointer = self.next_player(self.game_pointer)
@@ -148,7 +152,7 @@ class DurakGame:
 
             number_of_actions (int)
         '''
-        return len(state['actions'])
+        return 37
 
 
     def get_player_id(self):
@@ -183,7 +187,7 @@ class DurakGame:
             act_type = "defense"
         elif not state["field"]:
             act_type = "initial_attack"
-        state['actions'] = action.generate_legal_actions(self.field, self.players[player_id].hand, act_type)
+        state['actions'] = generate_legal_actions(self.field, self.players[player_id].hand, act_type)
 
         # hand = [card.get_index() for card in self.players[player_id].hand]
         # if self.is_over():
@@ -205,3 +209,6 @@ class DurakGame:
                 return False
 
         return True
+    
+    def getPlayerCards(self):
+        return self.players[0].hand, self.players[1].hand, self.players[2].hand, self.players[3].hand

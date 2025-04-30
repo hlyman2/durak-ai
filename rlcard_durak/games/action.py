@@ -60,16 +60,16 @@ def generate_legal_actions(field, hand, act_type):
 
 
 def beats(attack, defence, field):
-    if len(attack) != len(defense):
+    if len(attack) != len(defence):
         return None
 
-    match = [None] * len(defense)
+    match = [None] * len(defence)
 
     def backtrack(i):
         if i >= len(attack):
             return True
         atk = attack[i]
-        for idx, df in enumerate(defense):
+        for idx, df in enumerate(defence):
             if field.can_beat(atk, df) and df not in match:
                 match[i] = df
 

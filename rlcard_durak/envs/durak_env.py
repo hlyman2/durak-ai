@@ -44,13 +44,15 @@ class DurakEnv(Env):
         Returns:
             observation (list): combine the player's score and dealer's observable score for observation
         '''
-        cards = state['state']
-        my_cards = cards[0]
-        dealer_cards = cards[1]
+        player1_c, player2_c, player3_c, player4_c = self.game.getPlayerCards()
 
-        my_score = get_score(my_cards)
-        dealer_score = get_score(dealer_cards)
-        obs = np.array([my_score, dealer_score])
+        player1_s = get_score(player1_c)
+        player2_s = get_score(player2_c)
+        player3_s = get_score(player3_c)
+        player4_s = get_score(player4_c)
+
+
+        obs = np.array([player1_s, player2_s, player3_s, player4_s])
 
         legal_actions = OrderedDict({i: None for i in range(len(self.actions))})
         extracted_state = {'obs': obs, 'legal_actions': legal_actions}
@@ -68,10 +70,12 @@ class DurakEnv(Env):
         payoffs = []
 
         for i in range(self.num_players):
-            if self.game.winner['player' + str(i)] == 2:
-                payoffs.append(1)  # Dealer bust or player get higher score than dealer
+            if self.game.winner['player' + str(i)] == 3:
+                payoffs.append(2)  # Dealer bust or player get higher score than dealer
+            elif self.game.winner['player' + str(i)] == 2:
+                payoffs.append(1)  # Dealer and player tie
             elif self.game.winner['player' + str(i)] == 1:
-                payoffs.append(0)  # Dealer and player tie
+                payoffs.append(0)
             else:
                 payoffs.append(-1)  # Player bust or Dealer get higher score than player
 
@@ -89,15 +93,5 @@ class DurakEnv(Env):
         '''
         return self.actions[action_id]
 
-rank2score = {"A":11, "2":2, "3":3, "4":4, "5":5, "6":6, "7":7, "8":8, "9":9, "T":10, "J":10, "Q":10, "K":10}
 def get_score(hand):
-    score = 0
-    count_a = 0
-    for card in hand:
-        score += rank2score[card[1:]]
-        if card[1] == 'A':
-            count_a += 1
-    while score > 21 and count_a > 0:
-        count_a -= 1
-        score -= 10
-    return score
+    return 36 - len(hand)

@@ -1,3 +1,5 @@
+from rlcard.utils.utils import rank2int
+
 class Field:
     def can_beat(self, card, allegation):
         return (

@@ -11,6 +11,7 @@ class DurakDealer:
         self.deck = init_standard_deck()
         self.shuffle()
 
+
     def shuffle(self):
         ''' Shuffle the deck
         '''
@@ -21,4 +22,8 @@ class DurakDealer:
     def deal_to_6(self, victim, player):
         while not self.deck.empty() and len(player.hand) < 6:
             player.hand.append(self.deck.pop())
+
+    def getTrump(self):
+        card = self.deck[0]
+        return str(card)[1]
 
