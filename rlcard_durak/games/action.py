@@ -21,7 +21,7 @@ def generate_legal_actions(field, hand, act_type):
         allowed = []
 
         for rank in Card.valid_rank:
-            for i in range(len(ranks[rank])):
+            for i in range(1, len(ranks[rank])):
                 for combo in combinations(ranks[rank], i):
                     allowed.append(Action("initial_attack", combo))
 
@@ -48,10 +48,7 @@ def generate_legal_actions(field, hand, act_type):
         
     if act_type == "defense":
         allowed = []
-        unbeaten = []
-        for a, b in field.cards.items():
-            if b == None:
-                unbeaten.update(a, [])
+        unbeaten = field.unbeaten()
 
         for combo in combinations(hand, len(unbeaten)):
             match = beats(unbeaten, combo, field)
@@ -59,7 +56,7 @@ def generate_legal_actions(field, hand, act_type):
                 allowed.append(Action("defense", match))
 
 
-def beats(attack, defence, field):
+def beats(attack, defense, field):
     if len(attack) != len(defense):
         return None
 

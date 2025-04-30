@@ -25,8 +25,9 @@ class DurakGame:
         self.dealer = DurakDealer(self.players)
         self.judger = DurakJudger(self.np_random)
 
-        self.victim = 0
-        self.game_pointer = 1
+        self.victim = 1
+        self.game_pointer = 0
+        self.n_skipped = 0
 
         '''
         for i in range(self.num_players):
@@ -38,7 +39,6 @@ class DurakGame:
             self.winner['player' + str(i)] = 0
 
         self.history = []
-        self.game_pointer = 0
 
         return self.get_state(self.game_pointer), self.game_pointer
 
@@ -51,58 +51,91 @@ class DurakGame:
             self.history.append((d, p, w))
         '''
 
-        next_state = {}
-        # Play hit
-        if action != "stand":
-            self.dealer.deal_card(self.players[self.game_pointer])
-            self.players[self.game_pointer].status, self.players[self.game_pointer].score = self.judger.judge_round(
-                self.players[self.game_pointer])
-            if self.players[self.game_pointer].status == 'bust':
-                # game over, set up the winner, print out dealer's hand # If bust, pass the game pointer
-                if self.game_pointer >= self.num_players - 1:
-                    while self.judger.judge_score(self.dealer.hand) < 17:
-                        self.dealer.deal_card(self.dealer)
-                    self.dealer.status, self.dealer.score = self.judger.judge_round(self.dealer)
-                    for i in range(self.num_players):
-                        self.judger.judge_game(self, i) 
-                    self.game_pointer = 0
+        if action.act_type == "initial_attack":
+            for card in action.data:
+                self.players[self.game_pointer].hand.remove(card)
+                self.field.add(card)
+            self.game_pointer = self.next_player(self.game_pointer)
+
+        if action.act_type == "attack":
+            if action.data.empty():
+                n_skipped += 1
+                if n_skipped >= self.count_players() - 1 && self.field.unbeaten().empty():
+                    # allegations beat
+                    self.iterate_victim()
                 else:
-                    self.game_pointer += 1
+                    self.game_pointer = self.next_player(self.game_pointer)
+            else:    
+                n_skipped = 0
+                for card in action.data:
+                    self.players[self.game_pointer].hand.remove(card)
+                    self.field.add(card)
+                self.game_pointer = self.next_player(self.game_pointer)
 
-                
-        elif action == "stand": # If stand, first try to pass the pointer, if it's the last player, dealer deal for himself, then judge game for everyone using a loop
-            self.players[self.game_pointer].status, self.players[self.game_pointer].score = self.judger.judge_round(
-                self.players[self.game_pointer])
-            if self.game_pointer >= self.num_players - 1:
-                while self.judger.judge_score(self.dealer.hand) < 17:
-                    self.dealer.deal_card(self.dealer)
-                self.dealer.status, self.dealer.score = self.judger.judge_round(self.dealer)
-                for i in range(self.num_players):
-                    self.judger.judge_game(self, i) 
-                self.game_pointer = 0
+        if action.act_type == "defense":
+            self.n_skipped = 0
+
+            if action.data.empty(): # pick up cards
+                self.players[curr_player].cards.join(self.field.remove_all_cards())
+                self.iterate_victim()
+                self.iterate_victim()
             else:
-                self.game_pointer += 1
+                unbeaten = self.field.unbeaten()
+                beat = beats(unbeaten, action.data, self.field)
+                for i in range(self.field.unbeaten()):
+                    field[unbeaten[i]] = beat[i]
+                    self.players[self.game_pointer].hand.remove(beat[i])
 
+                if len(field.cards) >= field.max_cards: # allegations beat
+                    self.iterate_victim()
+                else:
+                    self.game_pointer = self.next_player(self.game_pointer)
 
-            
-            
+        return self.get_state(self.game_pointer), self.game_pointer
 
-        hand = [card.get_index() for card in self.players[self.game_pointer].hand]
+    def iterate_victim(self):
+        for i in 0..len(self.players):
+            if i != self.victim:
+                self.dealer.deal_to_6(self.players[i])
+        self.dealer.deal_to_6(self.players[self.victim])
 
-        if self.is_over():
-            dealer_hand = [card.get_index() for card in self.dealer.hand]
-        else:
-            dealer_hand = [card.get_index() for card in self.dealer.hand[1:]]
-
-        for i in range(self.num_players):
-            next_state['player' + str(i) + ' hand'] = [card.get_index() for card in self.players[i].hand]
-        next_state['dealer hand'] = dealer_hand
-        next_state['actions'] = ('hit', 'stand')
-        next_state['state'] = (hand, dealer_hand)
-
+        self.victim = self.next_player(self.victim)
         
+        self.game_pointer = self.last_player(self.victim)
 
-        return next_state, self.game_pointer
+        n_skipped = 0
+
+        self.field = Field(self.trump_suit, min(6, len(self.players[self.victim].hand)))
+
+    # returns the player behind curr_player
+    def last_player(self, curr_player):
+        new = curr_player - 1
+        if new < 0:
+            new = len(self.players) - 1
+        while self.players[new].isOut():
+            if new < 0:
+                new = len(self.players) - 1
+            else:
+                new -= 1
+
+        return new
+
+
+
+    def next_player(self, curr_player):
+        new = curr_player + 1
+        if new > len(self.players) - 1:
+            new = 0
+
+        while self.players[new].isOut():
+            if new >= len(self.players) - 1:
+                new = 0
+            else:
+                new += 1
+
+        return new
+
+
 
     def step_back(self):
         raise NotImplementedError
