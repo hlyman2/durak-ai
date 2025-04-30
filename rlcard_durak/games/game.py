@@ -148,7 +148,7 @@ class DurakGame:
         act_type = "attack"
         if player_id == self.victim:
             act_type = "defense"
-        else if field.empty():
+        elif not state["field"]:
             act_type = "initial_attack"
         state['actions'] = action.generate_legal_actions(self.field, self.players[player_id].hand, act_type)
 
